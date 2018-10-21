@@ -11,6 +11,7 @@ INIT_VALUE=0
 sqlite3 $DB_PATH "create table if not exists $TABLE (service_id text not null, value bigint not null);"
 
 # Inserts initialize data by services
-for i in "${SERVICE_IDS[@]}" do
+for i in "${SERVICE_IDS[@]}"
+do
 	sqlite3 $DB_PATH "insert into files_counter (service_id, value) values ('$i', $INIT_VALUE);"
 done
