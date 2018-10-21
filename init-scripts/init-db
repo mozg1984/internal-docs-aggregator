@@ -1,0 +1,16 @@
+#!/bin/bash
+
+DB_NAME="files-counter.db"
+DB_PATH="../resources/db/$DB_NAME"
+
+TABLE="files_counter"
+SERVICE_IDS=( "dispatchers" "safety" "control" )
+INIT_VALUE=0
+
+# Creates table for files counter by services
+sqlite3 $DB_PATH "create table if not exists $TABLE (service_id text not null, value bigint not null);"
+
+# Inserts initialize data by services
+for i in "${SERVICE_IDS[@]}" do
+	sqlite3 $DB_PATH "insert into files_counter (service_id, value) values ('$i', $INIT_VALUE);"
+done
