@@ -1,0 +1,9 @@
+sqlite-db: jdbc:sqlite:resources/db/files-counter.db
+
+temporary-storage: 
+  files: ""
+  index: ""
+
+regular-storage:
+  files: ""
+  index: ""

@@ -1,16 +1,17 @@
 package com.project.sql;
 
+import com.project.configuration.Configurator;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * 
- * Todo: add config file for all project
+ *
  */
 public class SQLiteConnection {
   
-  private static final String database = "jdbc:sqlite:resources/db/files-counter.db";
+  private static final String database = Configurator.get("sqlite-db");
   private static Connection connection = null;
 
   private SQLiteConnection () {}
