@@ -1,2 +1,5 @@
-1. mvn clean install
-2. java -cp target/internal-docs-aggregator-internal-docs-aggregator-0.0.1.jar com.project.SQLite
+mvn dependency:build-classpath
+
+mvn clean install
+
+java -jar web-module/target/web-module-0.0.1.jar

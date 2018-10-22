@@ -1,6 +1,6 @@
 package com.project;
 
-import com.project.utility.FileIdGenerator;;
+import com.project.utility.FileIdGenerator;
 
 public class SQLite {
   public static void main( String args[] ) {
