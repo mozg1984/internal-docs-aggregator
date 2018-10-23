@@ -45,10 +45,15 @@ public class Configurator {
 
       switch (value.getClass().getName()) {
         case "java.lang.String": return (String) value;
-        case "java.util.LinkedHashMap": config = (Map<String, Object>) value;
+        case "java.lang.Integer": return String.valueOf(value);
+        case "java.util.LinkedHashMap": config = (Map<String, Object>) value;      
       }
     }
 
     return null;
+  }
+
+  public static int getInt(String key) {
+    return Integer.parseInt(get(key));
   }
 }

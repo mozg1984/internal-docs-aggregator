@@ -1,9 +1,16 @@
 sqlite-db: jdbc:sqlite:resources/db/files-counter.db
 
-temporary-storage: 
-  files: ""
-  index: ""
+log4j:
+  properties: resources/log4j.properties
 
-regular-storage:
-  files: ""
-  index: ""
+storage:
+  files: /files-storage/files
+  indexes: /files-storage/indexes
+  buffer:
+    files: /files-storage/buffer/files
+    indexes: /files-storage/buffer/indexes
+
+processing-queue:
+  name: queue:buffer
+  timeout: 0
+  address: localhost
