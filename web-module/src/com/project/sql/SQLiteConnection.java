@@ -11,7 +11,7 @@ import java.sql.SQLException;
  */
 public class SQLiteConnection {
   
-  private static final String database = Configurator.get("sqlite-db");
+  private static final String database = Configurator.getString("sqlite-db");
   private static Connection connection = null;
 
   private SQLiteConnection () {}

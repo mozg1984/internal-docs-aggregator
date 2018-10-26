@@ -18,8 +18,8 @@ import java.util.Set;
 
 public class QueueWorker {
 	public static void main(String[] args) {
-		PropertyConfigurator.configure(Configurator.get("log4j.properties"));
-		String bufferDirectories = Configurator.get("storage.buffer.files");
+		PropertyConfigurator.configure(Configurator.getString("log4j.properties"));
+		String bufferDirectories = Configurator.getString("storage.buffer.files");
 
 		ProcessingQueue queue = new RedisQueue();
 		DocumentIndexer indexer = new DocumentIndexer();

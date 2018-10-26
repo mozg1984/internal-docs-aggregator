@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class Configurator {  
   private static final String path = "resources/config.yml";
@@ -29,31 +30,41 @@ public class Configurator {
     }
   }
 
-  public static String get(String key) {
+  public static Object get(String key) {
+    Object value = null;
+    Map<String, Object> config = null;
+
     if (configuration == null) {
       load();
-    }
-    
-    Map<String, Object> config = null;
+    }   
     
     for (String part : key.split("\\.")) {
-      Object value = (config == null ? configuration : config).get(part);
+      value = (config == null ? configuration : config).get(part);
 
       if (value == null) {
         break;
       }
 
       switch (value.getClass().getName()) {
-        case "java.lang.String": return (String) value;
-        case "java.lang.Integer": return String.valueOf(value);
+        case "java.lang.String": return value;
+        case "java.lang.Integer": return value;
+        case "java.util.ArrayList": return value;
         case "java.util.LinkedHashMap": config = (Map<String, Object>) value;      
       }
     }
 
-    return null;
+    return value;
   }
 
   public static int getInt(String key) {
-    return Integer.parseInt(get(key));
+    return (Integer) get(key);
+  }
+
+  public static String getString(String key) {
+    return (String) get(key);
+  }
+
+  public static <T> ArrayList<T> getArrayList(String key) {
+    return (ArrayList<T>) get(key);
   }
 }

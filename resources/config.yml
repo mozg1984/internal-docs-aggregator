@@ -14,3 +14,13 @@ processing-queue:
   name: queue:buffer
   timeout: 0
   address: localhost
+
+document-attributes:
+  default:
+    - id
+    - path
+    - owner
+    - category
+  dispatchers:
+  safety:
+  control:

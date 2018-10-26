@@ -23,7 +23,7 @@ public class DocumentIndexer {
     private String indexPath;
 
     public DocumentIndexer() {
-        indexPath = Configurator.get("storage.buffer.indexes");
+        indexPath = Configurator.getString("storage.buffer.indexes");
     }
 
     public void index(String documentContent) {

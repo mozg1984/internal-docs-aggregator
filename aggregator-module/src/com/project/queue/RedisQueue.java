@@ -10,9 +10,9 @@ public class RedisQueue implements ProcessingQueue {
   private Jedis jedis;
   
   public RedisQueue() {
-    queueName = Configurator.get("processing-queue.name");
+    queueName = Configurator.getString("processing-queue.name");
     timeout = Configurator.getInt("processing-queue.timeout");
-    jedis = new Jedis(Configurator.get("processing-queue.address"));
+    jedis = new Jedis(Configurator.getString("processing-queue.address"));
   }
   
   public void enqueue(String message) {
