@@ -2,8 +2,10 @@ package com.project.rest;
 
 import com.project.configuration.Configurator;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 public class RestServer {
   private int port;
@@ -33,9 +35,17 @@ public class RestServer {
     }
   }
   
+  private void setFilters(ServletContextHandler context) {
+    FilterHolder filterHolder = new FilterHolder(CrossOriginFilter.class);
+    filterHolder.setInitParameter("allowedOrigins", "*");
+    filterHolder.setInitParameter("allowedMethods", "GET, POST");
+    context.addFilter(filterHolder, "/*", null);
+  }
+
   private void init() {
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
     context.setContextPath("/");
+    setFilters(context);
     jettyServer.setHandler(context);
 
     ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
