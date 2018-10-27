@@ -58,7 +58,7 @@
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>com.project.SQLite</mainClass>
+              <mainClass>com.project.Starter</mainClass>
             </manifest>
           </archive>
         </configuration>

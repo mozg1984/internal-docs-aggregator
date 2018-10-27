@@ -35,3 +35,12 @@
 .form-control-file.border {
 	display: none;
 }
+
+img.loader {
+	width: 16px;
+	margin-left: 15px;
+}
+
+.glyphicon.glyphicon-file {
+	margin-left: 15px;
+}

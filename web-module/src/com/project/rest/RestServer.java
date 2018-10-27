@@ -57,10 +57,5 @@ public class RestServer {
       "jersey.config.server.provider.classnames",
       DocumentAPI.class.getCanonicalName() + ";" + MultiPartFeature.class.getCanonicalName()
     );
-
-    // jerseyServlet.setInitParameter(
-    //   "jersey.config.server.provider.classnames",
-    //   MultiPartFeature.class.getCanonicalName()
-    // );
   }
 }
