@@ -1,6 +1,8 @@
 package com.project.rest;
 
 import com.project.configuration.Configurator;
+import com.project.queue.ProcessingQueue;
+import com.project.queue.RedisQueue;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -29,7 +31,7 @@ import java.nio.file.FileSystems;
 
 
 @Path("/doc-api")
-public class DocumentAPI {
+public class DocumentAPI {    
     @GET
     @Path("/test")
     @Produces(MediaType.TEXT_PLAIN)
@@ -43,17 +45,21 @@ public class DocumentAPI {
     @Path("/save")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response upload(final FormDataMultiPart multiPart) {
-        List<FormDataBodyPart> bodyParts = multiPart.getFields("document");
         
-        System.out.println("Step 1");
+        ProcessingQueue queue = new RedisQueue();
+		queue.enqueue("Test message from web module");
 
-        for (FormDataBodyPart part : bodyParts) {
-            InputStream inputStream = part.getEntityAs(InputStream.class);
-            FormDataContentDisposition fileDetail = part.getFormDataContentDisposition();
-            writeToBuffer(inputStream, fileDetail.getFileName());
-        } 
+        // List<FormDataBodyPart> bodyParts = multiPart.getFields("document");
+        
+        // System.out.println("Step 1");
 
-        System.out.println("Step 2");
+        // for (FormDataBodyPart part : bodyParts) {
+        //     InputStream inputStream = part.getEntityAs(InputStream.class);
+        //     FormDataContentDisposition fileDetail = part.getFormDataContentDisposition();
+        //     writeToBuffer(inputStream, fileDetail.getFileName());
+        // } 
+
+        // System.out.println("Step 2");
 
         return Response.status(200).entity("Uploaded").build();
     }

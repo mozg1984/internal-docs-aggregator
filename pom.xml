@@ -5,11 +5,10 @@
   <artifactId>internal-docs-aggregator</artifactId>
   <packaging>pom</packaging>
   <version>0.0.1</version>
-  
-
 
   <modules>
     <module>yaml-configuration-module</module>
+    <module>queue-module</module>
     <module>web-module</module>
     <module>aggregator-module</module>
   </modules>

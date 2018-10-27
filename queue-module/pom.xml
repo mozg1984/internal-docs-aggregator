@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>web-module</groupId>
-  <artifactId>web-module</artifactId>
+  <groupId>queue-module</groupId>
+  <artifactId>queue-module</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.1</version>
-  <name>web-module</name>
-  <description>Web server for support REST API</description>
+  <version>1.0.0</version>
+  <name>queue-module</name>
+  <description>Queue module</description>
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -65,20 +65,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-jar-plugin</artifactId>
-      <configuration>
-          <archive>
-              <manifest>
-                  <addClasspath>true</addClasspath>
-                  <classpathPrefix>lib/</classpathPrefix>
-                  <mainClass>com.project.SQLite</mainClass>
-              </manifest>
-          </archive>
-      </configuration>
-  </plugin>
-
   <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-dependency-plugin</artifactId>
@@ -87,12 +73,12 @@
             <id>copy</id>
             <phase>install</phase>
             <goals>
-                <goal>copy-dependencies</goal>
+              <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-                <outputDirectory>
-                  ${project.build.directory}/lib
-                </outputDirectory>
+              <outputDirectory>
+                ${project.build.directory}/lib
+              </outputDirectory>
             </configuration>
         </execution>
     </executions>
@@ -102,74 +88,21 @@
   
   <dependencies>    
     <dependency>
-      <groupId>org.xerial</groupId>
-      <artifactId>sqlite-jdbc</artifactId>
-      <version>3.25.2</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.glassfish.jersey.containers</groupId>
-      <artifactId>jersey-container-jetty-http</artifactId>
-      <version>2.27</version>
-    </dependency>
-        
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-util</artifactId>
-      <version>9.4.12.v20180830</version>
-    </dependency>        
-    
-    <dependency>
-      <groupId>org.glassfish.jersey.core</groupId>
-      <artifactId>jersey-server</artifactId>
-      <version>2.27</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.glassfish.jersey.containers</groupId>
-      <artifactId>jersey-container-servlet-core</artifactId>
-      <version>2.27</version>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>2.9.0</version>
+      <type>jar</type>
     </dependency>
 
     <dependency>
-      <groupId>org.glassfish.jersey.media</groupId>
-      <artifactId>jersey-media-multipart</artifactId>
-      <version>2.27</version>
-    </dependency> 
-    
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-servlet</artifactId>
-      <version>9.4.12.v20180830</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-servlets</artifactId>
-      <version>9.4.12.v20180830</version>
-    </dependency>        
-    
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-server</artifactId>
-      <version>9.4.12.v20180830</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.glassfish.jersey.inject</groupId>
-      <artifactId>jersey-hk2</artifactId>
-      <version>2.27</version>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20180813</version>
     </dependency>
 
     <dependency>
         <groupId>yaml-configuration-module</groupId>
         <artifactId>yaml-configuration-module</artifactId>
-        <version>1.0.0</version>
-    </dependency>
-
-    <dependency>
-        <groupId>queue-module</groupId>
-        <artifactId>queue-module</artifactId>
         <version>1.0.0</version>
     </dependency>
   </dependencies>
