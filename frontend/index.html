@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Documents</title>
+<script src="libs/jquery-3.3.1/jquery.min.js"></script>
+<script src="libs/bootstrap-3.3.7/js/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.7/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="app.css">
+<script src="app.js"></script>
+</head>
+<body>
+	<div class="container">	
+		<div class="success alert alert-success alert-dismissible">
+			<a href="#" onclick="$(this).parent().hide(); return false;" class="close" aria-label="close">&times;</a>
+		    <strong>Success!</strong><span class="message"></span> 
+		</div>
+		
+		<div class="error alert alert-danger alert-dismissible">
+			<a href="#" onclick="$(this).parent().hide(); return false;" class="close" aria-label="close">&times;</a>
+		    <strong>Error!</strong><span class="message"></span>
+		</div>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">Documents</div>
+			<div class="panel-body">				
+				<div class="documents entities-container">
+					<div class="controls">
+						<button type="button" class="btn btn-xs add-control">Add</button>
+            <button type="button" class="btn btn-xs delete-control">Delete</button>
+            <button type="button" class="btn btn-xs commit-control pull-right">Commit</button>
+					</div>
+					<div class="list">
+						<table class="table table-bordered table-hover">
+							<thead>
+							  <tr>
+                  <th></th>
+                  <th>Name</th>
+							  </tr>
+							</thead>
+							<tbody>
+							  <tr>
+								  <td colspan="2" class="empty">Empty list</td>
+							  </tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+    </div>
+	</div>
+</body>
+</html>
