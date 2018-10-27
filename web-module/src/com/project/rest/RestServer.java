@@ -6,6 +6,7 @@ import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 public class RestServer {
   private int port;
@@ -54,7 +55,12 @@ public class RestServer {
     // Tells the Jersey Servlet which REST service/class to load.
     jerseyServlet.setInitParameter(
       "jersey.config.server.provider.classnames",
-      Document.class.getCanonicalName()
+      DocumentAPI.class.getCanonicalName() + ";" + MultiPartFeature.class.getCanonicalName()
     );
+
+    // jerseyServlet.setInitParameter(
+    //   "jersey.config.server.provider.classnames",
+    //   MultiPartFeature.class.getCanonicalName()
+    // );
   }
 }
