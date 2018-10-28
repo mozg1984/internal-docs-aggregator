@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import com.project.configuration.Configurator;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
@@ -16,12 +17,14 @@ import org.xml.sax.SAXException;
 
 public class DocumentParser {
 	private String path;
+	private int charsLimit;
 	private String content;
   private HashMap<String, String> metadata;
   private File file;
 	
 	public DocumentParser(String path) {
-    this.path = path;
+		this.path = path;
+		charsLimit = Configurator.getInt("tika.limit");
     file = new File(path);
 		this.metadata = new HashMap<String, String>();
   }
@@ -33,7 +36,7 @@ public class DocumentParser {
 	}
 	
 	public void parse() throws IOException, SAXException, TikaException {
-		BodyContentHandler handler = new BodyContentHandler();
+		BodyContentHandler handler = new BodyContentHandler(charsLimit);
     AutoDetectParser parser = new AutoDetectParser();
     Metadata metadata = new Metadata();
 		
