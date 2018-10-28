@@ -70,17 +70,17 @@ App.documents = (function () {
 	function getAttributes(service, category, catalog) {
 		if (service == '') {
 			App.error('service is undefined');
-			return;
+			return null;
 		}
 		
 		if (category == '') {
 			App.error('category is undefined');
-			return;
+			return null;
 		}
 
 		if (catalog == '') {
 			App.error('catalog is undefined');
-			return;
+			return null;
 		}
 
 		try {
@@ -88,7 +88,7 @@ App.documents = (function () {
 			App.DotNotation.validate(catalog);
 		} catch (e) {
 			App.error(e.message);
-			return;
+			return null;
 		}
 
 		return {
@@ -129,6 +129,13 @@ App.documents = (function () {
 						'</tr>';
 	}
 
+	function markTableAsSerching() {
+		$row = '<tr>' +
+							'<td colspan="2" class="empty">Searching...</td>' +
+						'</tr>';
+		$('.documents.entities-container > .list > table > tbody').html($row);
+	}
+
 	function checkboxView() {
 		return '<input type="checkbox" class="form-check-input">';
 	}
@@ -144,11 +151,28 @@ App.documents = (function () {
 					'</tr>';
 	}
 
-	function fileDownloadLinkRow(id) {
-		var link = 'http://localhost:8080/doc-api/get/' + getSelectedService() + '/' + id;
+	function fileDownloadLinkRow(id, service) {
+		var link = 'http://localhost:8080/doc-api/get/' + (service || getSelectedService()) + '/' + id;
 		return '<a href="' + link + '">' +
 							'<span class="glyphicon glyphicon-file"></span>' +
 						'</a>';
+	}
+
+	
+	function tableRowView(id, name, service) {
+		return '<tr>' +
+						'<td>' + checkboxView() + '</td>' +
+						'<td>' + name + fileDownloadLinkRow(id, service) + '</td>' +
+					'</tr>';
+	}
+
+	function addTableBy(documents) {
+		$('.documents.entities-container > .list > table > tbody').html('');
+		resetTable();
+		
+		for (var i = 0, n = documents.length; i < n; i++) {
+			addToTable(tableRowView(documents[i].id, documents[i].name, documents[i].service)); 
+		}
 	}
 
 	function isTableEmpty() {
@@ -233,6 +257,10 @@ App.documents = (function () {
 			getSelectedCatalog()
 		);
 
+		if (attributes == null) {
+			return;
+		}
+
 		formData.append(
 			'attributes', 
 			JSON.stringify(attributes)
@@ -259,8 +287,8 @@ App.documents = (function () {
 			data: formData,
 			processData: false,
     	contentType: false
-		};	
-
+		};
+		
 		App.httpRequest('http://localhost:8080/doc-api/save', requestOptions)
 		.then(function (response) {
 			setIdsInTable(response);
@@ -278,10 +306,25 @@ App.documents = (function () {
 		}
 	}
 
+
 	function search() {
-		App.httpRequest('http://localhost:8080/doc-api/search', requestOptions)
+		var attributes = getAttributes(
+			getSelectedService(),
+			getSelectedCategory(), 
+			getSelectedCatalog()
+		);
+
+		if (attributes == null) {
+			return;
+		}
+
+		var query = 'category:' + attributes.category + ' AND ' + 'catalog:' + attributes.catalog;
+
+		markTableAsSerching();
+
+		App.httpRequest('http://localhost:8080/doc-api/search/' + attributes.service + '/' + query)
 		.then(function (response) {
-			setIdsInTable(response);
+			addTableBy(response);
 		})
 		.catch(function (response) {
 			App.error('Something went wrong: ' + response);

@@ -9,6 +9,7 @@ import org.json.JSONObject;
  
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexNotFoundException;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -51,12 +52,26 @@ public class DocumentSearcher {
       QueryParser qp = new QueryParser(defaultField, new StandardAnalyzer());
       Query query = qp.parse(queryString);
 
-      IndexSearcher searcher = createSearcherInBuffer();    
-      TopDocs foundDocs = searcher.search(query, maxCountResult);
-      
-      if (foundDocs.totalHits == 0) {
-        searcher = createSearcherInStorage();
+      IndexSearcher searcher = null;   
+      TopDocs foundDocs = null;
+
+      // Tries to search in buffer index
+      try {
+        searcher = createSearcherInBuffer();    
         foundDocs = searcher.search(query, maxCountResult);
+      } catch(IndexNotFoundException e) {
+        System.out.println("Buffer index: IndexNotFoundException");
+      }
+
+      // If not found tries to search in storage index
+      if (searcher == null || foundDocs == null || foundDocs.totalHits == 0) {
+        try {
+          searcher = createSearcherInStorage();
+          foundDocs = searcher.search(query, maxCountResult);
+        } catch(IndexNotFoundException e) {
+          System.out.println("Storage index: IndexNotFoundException");
+          return documents; // Returns empty list
+        }
       }
     
       for (ScoreDoc scoreDoc : foundDocs.scoreDocs) {

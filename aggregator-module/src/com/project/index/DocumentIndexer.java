@@ -39,16 +39,16 @@ public class DocumentIndexer {
         if (id != null) { document.add(new StringField("id", id, Field.Store.YES)); }
         
         String name = metadata.get("name");
-        if (name != null) { document.add(new StringField("name", name, Field.Store.YES)); }
+        if (name != null) { document.add(new TextField("name", name, Field.Store.YES)); }
 
         String service = metadata.get("service");
         if (service != null) { document.add(new StringField("service", service, Field.Store.YES)); }
         
         String category = metadata.get("category");
-        if (category != null) { document.add(new StringField("category", category, Field.Store.YES)); }
+        if (category != null) { document.add(new TextField("category", category, Field.Store.YES)); }
         
         String catalog = metadata.get("catalog");
-        if (catalog != null) { document.add(new StringField("catalog", catalog, Field.Store.YES)); }
+        if (catalog != null) { document.add(new TextField("catalog", catalog, Field.Store.YES)); }
 
         addToIndex(document);
     }
