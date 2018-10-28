@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-import com.project.configuration.Configurator;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -22,8 +20,8 @@ import org.apache.lucene.store.FSDirectory;
 public class DocumentIndexer {
     private String indexPath;
 
-    public DocumentIndexer() {
-        indexPath = Configurator.getString("storage.buffer.indexes");
+    public DocumentIndexer(String indexPath) {
+        this.indexPath = indexPath;
     }
 
     public void index(String documentContent) {

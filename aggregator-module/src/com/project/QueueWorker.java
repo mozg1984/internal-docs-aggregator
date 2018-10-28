@@ -20,9 +20,9 @@ public class QueueWorker {
 	public static void main(String[] args) {
 		PropertyConfigurator.configure(Configurator.getString("log4j.properties"));
 		String bufferDirectories = Configurator.getString("storage.buffer.files");
+		String bufferIndexDirectory = Configurator.getString("storage.buffer.indexes");
 
 		ProcessingQueue queue = new RedisQueue();
-		DocumentIndexer indexer = new DocumentIndexer();
 
 		while(true) {
 			String message = queue.dequeue();
@@ -34,6 +34,7 @@ public class QueueWorker {
 				String docName = json.getString("name");
 				String service = json.getString("service");
 				String docPath = bufferDirectories + "/" + service + "/" + docId;
+				String indexPath = bufferIndexDirectory + "/" + service;
 				String category = json.getString("category");
 				String catalog = json.getString("catalog");
 
@@ -41,6 +42,7 @@ public class QueueWorker {
 				
 				if (docFile.exists()) {
 					DocumentParser parser = new DocumentParser(docPath);
+					DocumentIndexer indexer = new DocumentIndexer(indexPath);
 
 					parser.addToMetada("id", String.valueOf(docId));
 					parser.addToMetada("name", docName);

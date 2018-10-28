@@ -38,6 +38,10 @@ App.error = function (message) {
 	$('.error .message').text(message);
 };
 
+App.reset_errors = function () {
+	$('.error').hide();
+};
+
 App.modal = function (view) {
 	$modal = $(view);
 	
@@ -64,6 +68,21 @@ App.documents = (function () {
 	var ROOT = 'root';
 
 	function getAttributes(service, category, catalog) {
+		if (service == '') {
+			App.error('service is undefined');
+			return;
+		}
+		
+		if (category == '') {
+			App.error('category is undefined');
+			return;
+		}
+
+		if (catalog == '') {
+			App.error('catalog is undefined');
+			return;
+		}
+
 		try {
 			App.DotNotation.validate(category);
 			App.DotNotation.validate(catalog);
@@ -126,7 +145,7 @@ App.documents = (function () {
 	}
 
 	function fileDownloadLinkRow(id) {
-		var link = 'http://localhost:8080/doc-api/get/' + App.SERVICE + '/' + id;
+		var link = 'http://localhost:8080/doc-api/get/' + getSelectedService() + '/' + id;
 		return '<a href="' + link + '">' +
 							'<span class="glyphicon glyphicon-file"></span>' +
 						'</a>';
@@ -194,7 +213,6 @@ App.documents = (function () {
 		$docField = $row.find('[type="file"]');
 		$nameField = $row.find('td.document');
 
-		
 		addToTable($row);
 		
 		$docField.click();
@@ -209,15 +227,15 @@ App.documents = (function () {
 		var formData = new FormData(),
 				order = 0;
 
+		var attributes = getAttributes(
+			getSelectedService(),
+			getSelectedCategory(), 
+			getSelectedCatalog()
+		);
+
 		formData.append(
 			'attributes', 
-			JSON.stringify(
-				getAttributes(
-					getSelectedService(),
-					getSelectedCategory(), 
-					getSelectedCatalog()
-				)
-			)
+			JSON.stringify(attributes)
 		);
 
 		$('[type="file"]').each(function () {
@@ -399,6 +417,7 @@ App.documents = (function () {
 	function filterChanged() {
 		var $list = $('.documents.entities-container > .list > table > tbody').html('');
 		resetTable();
+		App.reset_errors();
 	}
 
 	function init() {		
