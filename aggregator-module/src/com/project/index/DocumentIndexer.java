@@ -42,21 +42,15 @@ public class DocumentIndexer {
         
         String name = metadata.get("name");
         if (name != null) { document.add(new StringField("name", name, Field.Store.YES)); }
-        
-        String path = metadata.get("path");
-        if (path != null) { document.add(new StringField("path", path, Field.Store.YES)); }
 
         String service = metadata.get("service");
-        if (service != null) { document.add(new StringField("service", service, Field.Store.YES)); }    
+        if (service != null) { document.add(new StringField("service", service, Field.Store.YES)); }
         
-        for (String key : metadata.keySet()) {
-            if (key.startsWith("attribute:")) {
-                String[] attribute = key.split(":");
-                if (attribute.length == 2 && attribute[1] != null && attribute[1].length() > 0) {
-                    document.add(new StringField(attribute[1], metadata.get(key), Field.Store.YES));
-                }
-            }
-        }
+        String category = metadata.get("category");
+        if (category != null) { document.add(new StringField("category", category, Field.Store.YES)); }
+        
+        String catalog = metadata.get("catalog");
+        if (catalog != null) { document.add(new StringField("catalog", catalog, Field.Store.YES)); }
 
         addToIndex(document);
     }

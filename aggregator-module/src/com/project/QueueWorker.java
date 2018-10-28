@@ -25,11 +25,7 @@ public class QueueWorker {
 		DocumentIndexer indexer = new DocumentIndexer();
 
 		while(true) {
-			System.out.println("Waiting for a message in the queue");
-			
 			String message = queue.dequeue();
-			
-			System.out.println("Message received:" + message);
 
 			try {
 				JSONObject json = new JSONObject(message);
@@ -38,7 +34,8 @@ public class QueueWorker {
 				String docName = json.getString("name");
 				String service = json.getString("service");
 				String docPath = bufferDirectories + "/" + service + "/" + docId;
-				JSONObject docAttributes = json.getJSONObject("attributes");
+				String category = json.getString("category");
+				String catalog = json.getString("catalog");
 
 				File docFile = new File(docPath);
 				
@@ -49,9 +46,8 @@ public class QueueWorker {
 					parser.addToMetada("name", docName);
 					parser.addToMetada("path", docPath);
 					parser.addToMetada("service", service);
-
-					Set<String> attributes = docAttributes.keySet();
-					attributes.forEach((key) -> { parser.addToMetada("attribute:" + key, String.valueOf(docAttributes.get(key))); });
+					parser.addToMetada("category", category);
+					parser.addToMetada("catalog", catalog);
 
 					try {
 						parser.parse();
