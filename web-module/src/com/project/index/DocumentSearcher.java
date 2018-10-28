@@ -25,9 +25,9 @@ public class DocumentSearcher {
   private int maxCountResult;
   private String defaultField;
 
-  public DocumentSearcher() {
-    bufferIndexPath = Configurator.getString("storage.buffer.indexes");
-    storageIndexPath = Configurator.getString("storage.indexes");
+  public DocumentSearcher(String service) {
+    bufferIndexPath = Configurator.getString("storage.buffer.indexes") + "/" + service;
+    storageIndexPath = Configurator.getString("storage.indexes") + "/" + service;
     maxCountResult = Configurator.getInt("index-search.query.max-count-result");
     defaultField = Configurator.getString("index-search.query.default-field");
   }
@@ -44,7 +44,7 @@ public class DocumentSearcher {
     return new IndexSearcher(reader);
   }
 
-  public List<String> searchBy(String queryString) {    
+  public List<String> searchBy(String queryString) {   
     List<String> documents = new ArrayList<>();
     
     try {

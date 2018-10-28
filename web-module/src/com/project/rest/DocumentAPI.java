@@ -35,10 +35,10 @@ import java.nio.file.FileSystems;
 @Path("/doc-api")
 public class DocumentAPI {
     @GET
-    @Path("/search/{query}")
+    @Path("/search/{service}/{query}")
     @Produces("application/json")
-    public Response search(@PathParam("query") String query) {
-        DocumentSearcher searcher = new DocumentSearcher();
+    public Response search(@PathParam("service") String service, @PathParam("query") String query) {
+        DocumentSearcher searcher = new DocumentSearcher(service);
         List<String> documents = searcher.searchBy(query);
         return Response.status(200).entity(documents.toString()).build();
     }
