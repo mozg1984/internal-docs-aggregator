@@ -6,55 +6,78 @@ import com.project.queue.ProcessingQueue;
 import com.project.queue.RedisQueue;
 
 import org.json.JSONObject;
-import org.json.JSONException;
+import com.project.index.DocumentSearcher;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
-import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.File;
 import java.nio.file.Files;
-import java.io.FileOutputStream;
+import java.nio.file.Paths;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 
-
-
 @Path("/doc-api")
 public class DocumentAPI {
+    @GET
+    @Path("/search/{query}")
+    @Produces("application/json")
+    public Response search(@PathParam("query") String query) {
+        DocumentSearcher searcher = new DocumentSearcher();
+        List<String> documents = searcher.searchBy(query);
+        return Response.status(200).entity(documents.toString()).build();
+    }
     
     @GET
     @Path("/get/{service}/{id}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String test(@PathParam("service") String service, @PathParam("id") String id) {
-        
-        System.out.println("service = " + service);
-        System.out.println("id = " + id);
+    public Response get(@PathParam("service") String service, @PathParam("id") String id) {
+        StreamingOutput fileStream =  new StreamingOutput() {
+            @Override
+            public void write(OutputStream output) throws IOException, WebApplicationException {
+                try {
+                    // Firstable, try to find file in buffer
+                    java.nio.file.Path path = Paths.get(getDocPathInBuffer(service, id));
 
-        return "Download requested file";
+                    // If document does not exists in buffer try to find it in storage
+                    if (!Files.exists(path)) {
+                        path = Paths.get(getDocPathInStorage(service, id));
+                    }
+
+                    byte[] data = Files.readAllBytes(path);
+                    output.write(data);
+                    output.flush();
+                } catch (Exception e) {
+                    throw new WebApplicationException("Document Not Found");
+                }
+            }
+        };
+        
+        return Response
+                .ok(fileStream, MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition", "attachment; filename = document")
+                .build();
     }
 
     @POST
     @Path("/save")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("application/json")
-    public Response upload(final FormDataMultiPart multiPart) {
+    public Response save(final FormDataMultiPart multiPart) {
         FormDataBodyPart attributesPart = multiPart.getField("attributes");
         String attributes = attributesPart.getValue();
 
@@ -76,7 +99,12 @@ public class DocumentAPI {
             documentAttributes.put("name", fileName);
 
             if (writeToBuffer(inputStream, documentAttributes)) {
-                ids.add(new JSONObject().put("name", fileName).put("id", id).toString());
+                ids.add(
+                    new JSONObject()
+                        .put("name", fileName)
+                        .put("id", id)
+                        .toString()
+                );
             }
         }
 
@@ -88,9 +116,7 @@ public class DocumentAPI {
         
         String id = documentAttributes.getString("id");
         String service = documentAttributes.getString("service");
-        
-        String bufferPath = Configurator.getString("storage.buffer.files");
-        String uploadedDocumentLocation = bufferPath + "/" + service + "/" + id;
+        String uploadedDocumentLocation = getDocPathInBuffer(service, id);
 
 		try {
             ProcessingQueue queue = new RedisQueue();
@@ -100,6 +126,7 @@ public class DocumentAPI {
             Files.copy(uploadedInputStream, path);
 
             // Enqueue attributes into Redis queue for processing
+            documentAttributes.put("action", "index");
             queue.enqueue(documentAttributes.toString());
 		} catch (IOException e) {
             e.printStackTrace();
@@ -107,5 +134,15 @@ public class DocumentAPI {
         }
         
         return result;
-	}
+    }
+    
+    private String getDocPathInBuffer(String service, String id) {
+        String bufferPath = Configurator.getString("storage.buffer.files");
+        return bufferPath + "/" + service + "/" + id;
+    }
+
+    private String getDocPathInStorage(String service, String id) {
+        String storagePath = Configurator.getString("storage.files");
+        return storagePath + "/" + service + "/" + id;
+    }
 }

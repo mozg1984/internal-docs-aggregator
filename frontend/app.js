@@ -1,7 +1,4 @@
 var App = {};
-	
-// Current service name
-App.SERVICE = 'dispatchers';
 
 App.httpRequest = function (url, options) {
 	options = $.extend({
@@ -66,7 +63,7 @@ App.DotNotation = {
 App.documents = (function () {
 	var ROOT = 'root';
 
-	function getAttributes(category, catalog) {
+	function getAttributes(service, category, catalog) {
 		try {
 			App.DotNotation.validate(category);
 			App.DotNotation.validate(catalog);
@@ -76,9 +73,17 @@ App.documents = (function () {
 		}
 
 		return {
-			service: App.SERVICE,
+			service: service,
 			category: ROOT + '.' + category,
 			catalog: ROOT + '.' + catalog
+		};
+	}
+
+	function getAttributesFromFilter() {
+		return {
+			service: getSelectedService(),
+			category: getSelectedCategory(),
+			catalog: getSelectedCatalog()
 		};
 	}
 	
@@ -152,6 +157,37 @@ App.documents = (function () {
 		}
 	}
 
+	function getJoinedTextValuesBy($tree) {
+		var nodes = $tree.treeview('getSelected');
+
+		if (nodes.length === 0) {
+			return '';
+		}
+		
+		var node = nodes[0];
+		var textValues = [node.text];
+		
+		var parentNode = $tree.treeview('getParent', node.nodeId);
+		while(parentNode.hasOwnProperty('parentId')) {
+			textValues.push(parentNode.text);
+			parentNode = $tree.treeview('getParent', parentNode.nodeId);
+		}
+			
+		return textValues.reverse().join('.');	
+	}
+
+	function getSelectedCategory() {
+		return getJoinedTextValuesBy($('#category-tree'));
+	}
+
+	function getSelectedCatalog() {
+		return getJoinedTextValuesBy($('#catalog-tree'));
+	}
+
+	function getSelectedService() {
+		return $("#services-list").val();
+	}
+
 	function add() {
 		$row = $(rowView());
 
@@ -177,8 +213,9 @@ App.documents = (function () {
 			'attributes', 
 			JSON.stringify(
 				getAttributes(
-					'orders', 
-					'catalog1.catalog2.catalog3'
+					getSelectedService(),
+					getSelectedCategory(), 
+					getSelectedCatalog()
 				)
 			)
 		);
@@ -208,7 +245,6 @@ App.documents = (function () {
 
 		App.httpRequest('http://localhost:8080/doc-api/save', requestOptions)
 		.then(function (response) {
-			console.log('success', response);
 			setIdsInTable(response);
 		})
 		.catch(function (response) {
@@ -224,7 +260,161 @@ App.documents = (function () {
 		}
 	}
 
-	function init() {
+	function search() {
+		App.httpRequest('http://localhost:8080/doc-api/search', requestOptions)
+		.then(function (response) {
+			setIdsInTable(response);
+		})
+		.catch(function (response) {
+			App.error('Something went wrong: ' + response);
+		});	
+	}
+
+	function getCategoryTree() {
+		return [
+			{
+				text: "category1",
+				state: {
+					expanded: false,
+				},
+				nodes: [
+					{
+						text: "category11",
+						state: {
+							expanded: false,
+						},
+						nodes: [
+							{
+								text: "category111"
+							},
+							{
+								text: "category112"
+							}
+						]
+					},
+					{
+						text: "category12"
+					}
+				]
+			},
+			{
+				text: "category2",
+				state: {
+					expanded: false,
+				},
+				nodes: [
+					{
+						text: "category21",
+						state: {
+							expanded: false,
+						},
+						nodes: [
+							{
+								text: "category211"
+							},
+							{
+								text: "category212",
+								state: {
+									expanded: false,
+								},
+								nodes: [
+									{
+										text: "category2121"
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				text: "category3"
+			}
+		];
+	}
+
+	function getCatalogTree() {
+		return [
+			{
+				text: "catalog1",
+				state: {
+					expanded: false,
+				},
+				nodes: [
+					{
+						text: "catalog11",
+						state: {
+							expanded: false,
+						},
+						nodes: [
+							{
+								text: "catalog111"
+							},
+							{
+								text: "catalog112"
+							}
+						]
+					},
+					{
+						text: "catalog12"
+					}
+				]
+			},
+			{
+				text: "catalog2",
+				state: {
+					expanded: false,
+				},
+				nodes: [
+					{
+						text: "catalog21",
+						state: {
+							expanded: false,
+						},
+						nodes: [
+							{
+								text: "catalog211"
+							},
+							{
+								text: "catalog212",
+								state: {
+									expanded: false,
+								},
+								nodes: [
+									{
+										text: "catalog2121"
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				text: "catalog3"
+			}
+		];
+	}
+
+	function filterChanged() {
+		var $list = $('.documents.entities-container > .list > table > tbody').html('');
+		resetTable();
+	}
+
+	function init() {		
+		$('#category-tree').treeview({data: getCategoryTree()});
+		$('#catalog-tree').treeview({data: getCatalogTree()});
+
+		$('#services-list').on('change', filterChanged);
+
+		$('#category-tree')
+			.on('nodeSelected', filterChanged)
+			.on('nodeUnselected', filterChanged);
+
+		$('#catalog-tree')
+			.on('nodeSelected', filterChanged)
+			.on('nodeUnselected', filterChanged);
+		
 		$(document).on('click', '.documents.entities-container .add-control', function () {
 			add();	
 		});
@@ -240,6 +430,7 @@ App.documents = (function () {
 	
 	// public API
 	return {
+		search: search,
 		init: init
 	};
 })();

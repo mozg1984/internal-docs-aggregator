@@ -2,15 +2,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Documents</title>
+<title>Test stend: documents</title>
 <script src="libs/jquery-3.3.1/jquery.min.js"></script>
 <script src="libs/bootstrap-3.3.7/js/bootstrap.js"></script>
+<script src="libs/bootstrap-treeview-1.2.0/bootstrap-treeview.min.js"></script>
 <link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.7/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="libs/bootstrap-treeview-1.2.0/bootstrap-treeview.min.css">
 <link rel="stylesheet" type="text/css" href="app.css">
 <script src="app.js"></script>
 </head>
 <body>
-	<div class="container">	
+	<div class="container">
 		<div class="success alert alert-success alert-dismissible">
 			<a href="#" onclick="$(this).parent().hide(); return false;" class="close" aria-label="close">&times;</a>
 		    <strong>Success!</strong><span class="message"></span> 
@@ -20,8 +22,39 @@
 			<a href="#" onclick="$(this).parent().hide(); return false;" class="close" aria-label="close">&times;</a>
 		    <strong>Error!</strong><span class="message"></span>
 		</div>
+
+		<div class="panel panel-default services">
+			<div class="panel-heading">Services</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<select class="form-control" id="services-list">
+						<option value="dispatchers">dispatchers</option>
+						<option value="control">control</option>
+						<option value="safety">safety</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default categories">
+			<div class="panel-heading">Category</div>
+			<div class="panel-body">
+				<div id="category-tree"></div>
+			</div>
+		</div>
 		
-		<div class="panel panel-default">
+		<div class="panel panel-default catalogs">
+			<div class="panel-heading">Catalog</div>
+			<div class="panel-body">
+				<div id="catalog-tree"></div>
+			</div>
+		</div>
+
+		<button type="button" class="btn btn-default btn-sm" style="margin-bottom: 5px;" onclick="App.documents.search();">
+			<span class="glyphicon glyphicon-refresh"></span> Search
+		</button>
+
+		<div class="panel panel-default documents">
 			<div class="panel-heading">Documents</div>
 			<div class="panel-body">				
 				<div class="documents entities-container">
@@ -30,7 +63,7 @@
             <button type="button" class="btn btn-xs delete-control">Delete</button>
             <button type="button" class="btn btn-xs commit-control pull-right">Commit</button>
 					</div>
-					<div class="list">
+					<div class="list">						
 						<table class="table table-bordered table-hover">
 							<thead>
 							  <tr>

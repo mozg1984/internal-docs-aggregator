@@ -1,15 +1,12 @@
 package com.project.utility;
 
 import com.project.sql.SQLiteConnection;
+import com.project.configuration.Configurator;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-/**
- * 
- * Todo: add logging
- */
 public class FileIdGenerator {
   
   public FileIdGenerator() {}
@@ -21,7 +18,7 @@ public class FileIdGenerator {
     try {
       connection = SQLiteConnection.get();
       Statement statement = connection.createStatement();
-      statement.setQueryTimeout(30);  // set timeout to 30 sec.
+      statement.setQueryTimeout(Configurator.getInt("sqlite.timeout"));
       
       ResultSet rs = statement.executeQuery("select value from files_counter where service_id = '" + serviceId + "'");
       
