@@ -1,4 +1,4 @@
-package com.project.parser;
+package com.project;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,23 +16,27 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 public class DocumentParser {
-	private String path;
-	private int charsLimit;
-	private String content;
-  private HashMap<String, String> metadata;
-  private File file;
+	private String path = null;
+	private int charsLimit = Configurator.getInt("tika.limit");
+	private String content = "";
+  private HashMap<String, String> metadata = new HashMap<String, String>();
+	private File file = null;
+	private InputStream stream = null;
 	
-	public DocumentParser(String path) {
-		this.path = path;
-		charsLimit = Configurator.getInt("tika.limit");
-    file = new File(path);
-		this.metadata = new HashMap<String, String>();
+	public DocumentParser(String path) throws IOException {
+		this.path = path;		
+		file = new File(path);
+		stream = new FileInputStream(file);
   }
   
-  public DocumentParser(File file) {
+  public DocumentParser(File file) throws IOException {
     this.file = file;
-    this.path = file.getPath();
-		this.metadata = new HashMap<String, String>();
+		this.path = file.getPath();
+		stream = new FileInputStream(file);
+	}
+
+	public DocumentParser(InputStream stream) {
+    this.stream = stream;
 	}
 	
 	public void parse() throws IOException, SAXException, TikaException {
@@ -41,7 +45,6 @@ public class DocumentParser {
     Metadata metadata = new Metadata();
 		
 		try {
-			InputStream stream = new FileInputStream(file);
 			parser.parse(stream, handler, metadata);
 			content = handler.toString().replaceAll(" \\s+", "");
 			extractMetadata(metadata);

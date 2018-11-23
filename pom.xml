@@ -9,6 +9,7 @@
   <modules>
     <module>yaml-configuration-module</module>
     <module>queue-module</module>
+    <module>document-processor-module</module>
     <module>web-module</module>
     <module>aggregator-module</module>
   </modules>

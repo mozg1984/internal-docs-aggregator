@@ -9,16 +9,16 @@ import org.json.JSONException;
 import java.io.File;
 
 import com.project.configuration.Configurator;
-import org.apache.log4j.PropertyConfigurator;
+// import org.apache.log4j.PropertyConfigurator;
 
-import com.project.parser.DocumentParser;
+import com.project.DocumentParser;
 import com.project.index.DocumentIndexer;
 
 import java.util.Set;
 
 public class QueueWorker {
 	public static void main(String[] args) {
-		PropertyConfigurator.configure(Configurator.getString("log4j.properties"));
+		// PropertyConfigurator.configure(Configurator.getString("log4j.properties"));
 		String bufferDirectories = Configurator.getString("storage.buffer.files");
 		String bufferIndexDirectory = Configurator.getString("storage.buffer.indexes");
 
@@ -41,17 +41,17 @@ public class QueueWorker {
 				File docFile = new File(docPath);
 				
 				if (docFile.exists()) {
-					DocumentParser parser = new DocumentParser(docPath);
-					DocumentIndexer indexer = new DocumentIndexer(indexPath);
-
-					parser.addToMetada("id", String.valueOf(docId));
-					parser.addToMetada("name", docName);
-					parser.addToMetada("path", docPath);
-					parser.addToMetada("service", service);
-					parser.addToMetada("category", category);
-					parser.addToMetada("catalog", catalog);
-
 					try {
+						DocumentParser parser = new DocumentParser(docPath);
+						DocumentIndexer indexer = new DocumentIndexer(indexPath);
+
+						parser.addToMetada("id", String.valueOf(docId));
+						parser.addToMetada("name", docName);
+						parser.addToMetada("path", docPath);
+						parser.addToMetada("service", service);
+						parser.addToMetada("category", category);
+						parser.addToMetada("catalog", catalog);
+
 						parser.parse();
 						indexer.index(parser.getContent(), parser.getMetadata());
 					} catch(Exception e) {

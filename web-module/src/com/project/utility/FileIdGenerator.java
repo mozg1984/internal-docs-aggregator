@@ -9,9 +9,13 @@ import java.sql.Statement;
 
 public class FileIdGenerator {
   
-  public FileIdGenerator() {}
+  private String serviceId;
 
-  public String generateFor(String serviceId) {
+  public FileIdGenerator(String serviceId) {
+    this.serviceId = serviceId;
+  }
+
+  public String generate() {
     Connection connection = null;
     String fileId = "-1";
 

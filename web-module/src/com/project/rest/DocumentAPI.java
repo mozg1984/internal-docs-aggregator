@@ -1,7 +1,10 @@
 package com.project.rest;
 
 import com.project.configuration.Configurator;
+import com.project.DocumentParser;
 import com.project.utility.FileIdGenerator;
+import com.project.utility.FileHasher;
+import com.project.utility.DocumentIdentifier;
 import com.project.queue.ProcessingQueue;
 import com.project.queue.RedisQueue;
 
@@ -92,7 +95,13 @@ public class DocumentAPI {
             documentAttributes = new JSONObject(attributes);
             String service = documentAttributes.getString("service");
 
-            String id = new FileIdGenerator().generateFor(service);
+            DocumentIdentifier documentIdentifier = new DocumentIdentifier(
+                new FileIdGenerator(service),
+                new DocumentParser(inputStream),
+                new FileHasher()
+            );
+
+            String id = documentIdentifier.get();
             String fileName = fileDetail.getFileName();
 
             documentAttributes.put("id", id);
