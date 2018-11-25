@@ -3,8 +3,8 @@ package com.project.index;
 import com.project.utility.FileIdGenerator;
 import com.project.utility.FileHasher;
 import com.project.DocumentParser;
-import com.project.index.DocumentCollection;
-import com.project.index.DocumentSearcher;
+import com.project.DocumentCollection;
+import com.project.DocumentSearcher;
 import org.json.JSONObject;
 import java.util.List;
 import javax.ws.rs.core.StreamingOutput;
@@ -20,7 +20,6 @@ import com.project.queue.ProcessingQueue;
 import com.project.queue.RedisQueue;
 
 import org.json.JSONObject;
-import com.project.index.DocumentSearcher;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

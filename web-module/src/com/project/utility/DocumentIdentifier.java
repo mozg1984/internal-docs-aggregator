@@ -1,7 +1,7 @@
 package com.project.utility;
 
-import com.project.index.DocumentCollection;
-import com.project.index.DocumentSearcher;
+import com.project.DocumentCollection;
+import com.project.DocumentSearcher;
 
 public class DocumentIdentifier {
   private DocumentSearcher documentSearcher;

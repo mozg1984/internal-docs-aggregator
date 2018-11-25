@@ -1,4 +1,4 @@
-package com.project.index;
+package com.project;
 
 import org.apache.lucene.document.Document;
 

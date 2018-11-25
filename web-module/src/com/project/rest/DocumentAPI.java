@@ -10,7 +10,7 @@ import com.project.queue.ProcessingQueue;
 import com.project.queue.RedisQueue;
 
 import org.json.JSONObject;
-import com.project.index.DocumentSearcher;
+import com.project.DocumentSearcher;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

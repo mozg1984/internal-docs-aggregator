@@ -1,4 +1,4 @@
-package com.project.index;
+package com.project;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -16,7 +16,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-public class DocumentSearcher {  
+public class DocumentSearcher {
   private String bufferIndexPath;
   private String storageIndexPath;
   private int maxCountResult;

@@ -12,5 +12,6 @@
     <module>document-processor-module</module>
     <module>web-module</module>
     <module>aggregator-module</module>
+    <module>document-searcher-module</module>
   </modules>
 </project>
