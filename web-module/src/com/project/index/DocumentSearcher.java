@@ -1,12 +1,8 @@
 package com.project.index;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.IOException;
 import java.nio.file.Paths;
-import com.project.configuration.Configurator;
-import org.json.JSONObject;
- 
+import com.project.configuration.Configurator; 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexNotFoundException;
@@ -20,7 +16,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-public class DocumentSearcher {
+public class DocumentSearcher {  
   private String bufferIndexPath;
   private String storageIndexPath;
   private int maxCountResult;
@@ -45,9 +41,9 @@ public class DocumentSearcher {
     return new IndexSearcher(reader);
   }
 
-  public List<String> searchBy(String queryString) {   
-    List<String> documents = new ArrayList<>();
-    
+  public DocumentCollection searchByQuery(String queryString) {
+    DocumentCollection collection = new DocumentCollection();
+
     try {
       QueryParser qp = new QueryParser(defaultField, new StandardAnalyzer());
       Query query = qp.parse(queryString);
@@ -70,28 +66,18 @@ public class DocumentSearcher {
           foundDocs = searcher.search(query, maxCountResult);
         } catch(IndexNotFoundException e) {
           System.out.println("Storage index: IndexNotFoundException");
-          return documents; // Returns empty list
+          return collection; // returns empty list
         }
       }
-    
-      for (ScoreDoc scoreDoc : foundDocs.scoreDocs) {
-          Document document = searcher.doc(scoreDoc.doc);
 
-          documents.add(
-            new JSONObject()
-              .put("id", document.get("id"))
-              .put("name", document.get("name"))
-              .put("service", document.get("service"))
-              .put("category", document.get("category"))
-              .put("catalog", document.get("catalog"))
-              .put("score", scoreDoc.score)
-              .toString()
-          );
+      for (ScoreDoc scoreDoc : foundDocs.scoreDocs) {
+        Document document = searcher.doc(scoreDoc.doc);
+        collection.add(document, String.valueOf(scoreDoc.score));
       }
     } catch(Exception e) {
       e.printStackTrace();
     }
 
-    return documents;
+    return collection;
   }
 }

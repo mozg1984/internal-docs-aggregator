@@ -11,6 +11,7 @@ import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -23,6 +24,9 @@ public class DocumentParser {
 	private File file = null;
 	private InputStream stream = null;
 	
+	// Configuring loging by specific log file
+	{ PropertyConfigurator.configure(Configurator.getString("log4j.properties")); }
+
 	public DocumentParser(String path) throws IOException {
 		this.path = path;		
 		file = new File(path);

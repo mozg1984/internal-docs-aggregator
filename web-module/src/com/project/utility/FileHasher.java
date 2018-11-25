@@ -6,11 +6,11 @@ public class FileHasher {
   
   public FileHasher() {}
 
-  public String getMD5Hash(String text) {
-    return DigestUtils.md5Hex(text);
+  public static String getMD5Hash(String content) {
+    return DigestUtils.md5Hex(content);
   }
 
-  public String getSHA256Hash(String text) {
-    return DigestUtils.sha256Hex(text);
+  public static String getSHA256Hash(String content) {
+    return DigestUtils.sha256Hex(content);
   }
 }

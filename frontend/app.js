@@ -289,7 +289,7 @@ App.documents = (function () {
     	contentType: false
 		};
 		
-		App.httpRequest('http://localhost:8080/doc-api/save', requestOptions)
+		App.httpRequest('http://localhost:8080/doc-api/create', requestOptions)
 		.then(function (response) {
 			setIdsInTable(response);
 		})
