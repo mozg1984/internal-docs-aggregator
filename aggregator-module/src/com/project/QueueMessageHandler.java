@@ -2,12 +2,11 @@ package com.project;
 
 import org.json.JSONObject;
 import org.json.JSONException;
-
 import java.io.File;
-
 import com.project.configuration.Configurator;
 import com.project.DocumentParser;
 import com.project.index.DocumentIndexer;
+import org.apache.lucene.document.Document;
 
 public class QueueMessageHandler {
   public static final String CREATE_ACTION = "CREATE";
@@ -35,7 +34,7 @@ public class QueueMessageHandler {
       String catalog = message.getString("catalog");
 
       File docFile = new File(docPath);
-      
+        
       if (docFile.exists()) {
         try {
           DocumentParser parser = new DocumentParser(docPath);

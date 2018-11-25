@@ -15,7 +15,7 @@ import com.project.configuration.Configurator;
 import com.project.DocumentParser;
 import com.project.utility.FileIdGenerator;
 import com.project.utility.FileHasher;
-import com.project.utility.DocumentIdentifier;
+import com.project.index.DocumentUniqueChecker;
 import com.project.queue.ProcessingQueue;
 import com.project.queue.RedisQueue;
 
@@ -96,27 +96,27 @@ public class DocumentOperations {
 
       DocumentParser documentParser = new DocumentParser(part.getEntityAs(InputStream.class));
       try { documentParser.parse(); } catch(Exception e) { return ids.toString(); }
+      String documentHash = FileHasher.getMD5Hash(documentParser.getContent());
 
-      DocumentIdentifier documentIdentifier = new DocumentIdentifier(
-          new DocumentSearcher(service),
-          new FileIdGenerator(service)
+      DocumentUniqueChecker documentUniqueChecker = new DocumentUniqueChecker(
+        new DocumentSearcher(service)          
       );
 
-      String documentHash = FileHasher.getMD5Hash(documentParser.getContent());
-      String id = documentIdentifier.get(documentHash);
-      
+      if (documentUniqueChecker.checkByHash(documentHash)) {
+        return ids.toString();
+      }
+
+      String id = new FileIdGenerator(service).generate();      
       if (id.equals("-1")) { // Check correctness of taken document id
         System.out.println("Not correct id");
         return ids.toString();
       }
       
-      boolean isIdUnique = documentIdentifier.isUnique();
       String fileName = fileDetail.getFileName();
 
       documentAttributes.put("id", id);
-      documentAttributes.put("hash", documentHash);
-      documentAttributes.put("unique", isIdUnique);
       documentAttributes.put("name", fileName);
+      documentAttributes.put("hash", documentHash);
 
       if (writeToBuffer(part.getEntityAs(InputStream.class), documentAttributes)) {
         ids.add(
@@ -144,15 +144,11 @@ public class DocumentOperations {
 
     try {
       ProcessingQueue queue = new RedisQueue();
-
-      if (isUnique) {
-        System.out.println("is unique");
-        
-        String uploadedDocumentLocation = getDocPathInBuffer(service, id);
-        // Saves document into buffer
-        java.nio.file.Path path = FileSystems.getDefault().getPath(uploadedDocumentLocation);
-        Files.copy(uploadedInputStream, path);
-      }
+      
+      String uploadedDocumentLocation = getDocPathInBuffer(service, id);
+      // Saves document into buffer
+      java.nio.file.Path path = FileSystems.getDefault().getPath(uploadedDocumentLocation);
+      Files.copy(uploadedInputStream, path);
 
       // Enqueue attributes into Redis queue for processing
       documentAttributes.put("action", CREATE_ACTION);

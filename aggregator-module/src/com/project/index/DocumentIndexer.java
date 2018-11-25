@@ -41,6 +41,9 @@ public class DocumentIndexer {
         String name = metadata.get("name");
         if (name != null) { document.add(new TextField("name", name, Field.Store.YES)); }
 
+        String hash = metadata.get("hash");
+        if (hash != null) { document.add(new StringField("hash", hash, Field.Store.YES)); }
+
         String service = metadata.get("service");
         if (service != null) { document.add(new StringField("service", service, Field.Store.YES)); }
         
