@@ -5,17 +5,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-
 import com.project.configuration.Configurator;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
-
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+/**
+ * Document parser.
+ * It retrieves document content and metadata 
+ * independently of document format
+ */
 public class DocumentParser {
 	private String path = null;
 	private int charsLimit = Configurator.getInt("tika.limit");

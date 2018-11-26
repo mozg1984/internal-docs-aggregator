@@ -10,8 +10,8 @@ log4j:
 
 index-search:
   query:
-    default-field: 'contents'
-    max-count-result: 10
+    default-field: 'content'
+    max-count-result: 100
 
 tika:
   limit: -1 # Unlimited chars count

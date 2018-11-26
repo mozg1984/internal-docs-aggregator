@@ -6,7 +6,7 @@ import java.io.File;
 import com.project.configuration.Configurator;
 import com.project.DocumentParser;
 import com.project.index.DocumentIndexer;
-import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
 
 public class QueueMessageHandler {
   public static final String CREATE_ACTION = "CREATE";
@@ -50,9 +50,6 @@ public class QueueMessageHandler {
 
           parser.parse();
           indexer.index(parser.getContent(), parser.getMetadata());
-
-          System.out.println("QueueMessageHandler: content");
-          System.out.println(parser.getContent());
         } catch(Exception e) {
           e.printStackTrace();
         }
@@ -62,5 +59,17 @@ public class QueueMessageHandler {
     }
   }
 
-  private void delete(JSONObject message) {}
+  private void delete(JSONObject message) {
+    String service = message.getString("service");
+    String id = message.getString("id");
+    String bufferIndexDirectory = Configurator.getString("storage.buffer.indexes");
+    String indexPath = bufferIndexDirectory + "/" + service;
+
+    try {     
+      DocumentIndexer indexer = new DocumentIndexer(indexPath);
+      indexer.deleteFromIndex(new Term("id", id));
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
 }

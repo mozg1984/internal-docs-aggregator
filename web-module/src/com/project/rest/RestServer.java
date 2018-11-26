@@ -8,6 +8,9 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
+/**
+ * REST Server
+ */
 public class RestServer {
   private int port;
   private Server jettyServer;

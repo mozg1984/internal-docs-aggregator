@@ -9,12 +9,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import javax.ws.rs.core.MediaType;
 
-
+/**
+ * REST API methods:
+ * GET:  /doc-api/search/{service}/{query}
+ * GET:  /doc-api/get/{service}/{id}
+ * POST: /doc-api/create
+ * POST: /doc-api/delete
+ */
 @Path("/doc-api")
 public class DocumentAPI {
     private DocumentOperations documentOperations;
@@ -27,8 +31,8 @@ public class DocumentAPI {
     @Path("/search/{service}/{query}")
     @Produces("application/json")
     public Response search(@PathParam("service") String service, @PathParam("query") String query) {
-        String documents = documentOperations.search(service, query);
-        return Response.status(200).entity(documents).build();
+        String response = documentOperations.search(service, query);
+        return Response.status(200).entity(response).build();
     }
     
     @GET
@@ -46,9 +50,16 @@ public class DocumentAPI {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("application/json")
     public Response create(final FormDataMultiPart multiPart) {
-        String ids = documentOperations.create(multiPart);
-        return Response.status(200).entity(ids).build();
+        String response = documentOperations.create(multiPart);
+        return Response.status(200).entity(response).build();
     }
 
-    // delete
+    @POST
+    @Path("/delete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
+    public Response delete(String data) {
+        String response = documentOperations.delete(data);
+        return Response.status(200).entity(response).build();
+    }
 }

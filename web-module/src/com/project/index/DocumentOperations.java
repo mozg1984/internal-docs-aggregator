@@ -20,6 +20,7 @@ import com.project.queue.ProcessingQueue;
 import com.project.queue.RedisQueue;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -35,8 +36,10 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
+import java.util.Iterator;
 import javax.ws.rs.core.MediaType;
 import java.io.InputStream;
+import java.io.File;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,21 +64,14 @@ public class DocumentOperations {
     return new StreamingOutput() {
       @Override
       public void write(OutputStream output) throws IOException, WebApplicationException {
-          try {
-              // Firstable, try to find file in buffer
-              java.nio.file.Path path = Paths.get(getDocPathInBuffer(service, id));
-
-              // If document does not exists in buffer try to find it in storage
-              if (!Files.exists(path)) {
-                  path = Paths.get(getDocPathInStorage(service, id));
-              }
-
-              byte[] data = Files.readAllBytes(path);
-              output.write(data);
-              output.flush();
-          } catch (Exception e) {
-              throw new WebApplicationException("Document Not Found");
-          }
+        try {
+          java.nio.file.Path path = getDocPath(service, id);
+          byte[] data = Files.readAllBytes(path);
+          output.write(data);
+          output.flush();
+        } catch (Exception e) {
+          throw new WebApplicationException("Document Not Found");
+        }
       }
     };
   }
@@ -84,12 +80,20 @@ public class DocumentOperations {
     FormDataBodyPart attributesPart = multiPart.getField("attributes");
     String attributes = attributesPart.getValue();
 
+    List<String> processedFiles = new ArrayList<>();
     List<FormDataBodyPart> documentParts = multiPart.getFields("document");
     List<String> ids = new ArrayList<>();
     JSONObject documentAttributes;
     
     for (FormDataBodyPart part : documentParts) {
       FormDataContentDisposition fileDetail = part.getFormDataContentDisposition();
+
+      String fileName = fileDetail.getFileName();
+      fileName = decodeToUtf8(fileName);
+      
+      // Checks if file exists
+      if (processedFiles.contains(fileName)) { continue; } 
+      else { processedFiles.add(fileName); }      
 
       documentAttributes = new JSONObject(attributes);
       String service = documentAttributes.getString("service");
@@ -102,17 +106,15 @@ public class DocumentOperations {
         new DocumentSearcher(service)          
       );
 
-      if (documentUniqueChecker.checkByHash(documentHash)) {
-        return ids.toString();
+      if (!documentUniqueChecker.checkByHash(documentHash)) {
+        continue;
       }
 
       String id = new FileIdGenerator(service).generate();      
       if (id.equals("-1")) { // Check correctness of taken document id
         System.out.println("Not correct id");
-        return ids.toString();
+        continue;
       }
-      
-      String fileName = fileDetail.getFileName();
 
       documentAttributes.put("id", id);
       documentAttributes.put("name", fileName);
@@ -131,15 +133,40 @@ public class DocumentOperations {
     return ids.toString();
   }
 
-  public void delete() {
-    // return uniqueness;
+  public String delete(String data) {
+    JSONObject deletedIds = new JSONObject();
+    JSONObject jsonData = new JSONObject(data);
+    String service = jsonData.getString("service");
+    String ids = jsonData.getString("ids");
+
+    ProcessingQueue queue = new RedisQueue();
+
+    for (String id : ids.split(",")) {
+      deletedIds.put(id, false);
+      java.nio.file.Path path = getDocPath(service, id);
+      
+      try {
+        JSONObject message = new JSONObject();
+        message.put("action", DELETE_ACTION);
+        message.put("service", service);
+        message.put("id", id);
+        
+        Files.delete(path);       
+
+        queue.enqueue(message.toString());
+        deletedIds.put(id, true);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    return deletedIds.toString();
   }
 
   private boolean writeToBuffer(InputStream uploadedInputStream, JSONObject documentAttributes) {
     boolean result = true;
     
     String id = documentAttributes.getString("id");
-    boolean isUnique = documentAttributes.getBoolean("unique");
     String service = documentAttributes.getString("service");
 
     try {
@@ -159,6 +186,26 @@ public class DocumentOperations {
     }
       
     return result;
+  }
+
+  private java.nio.file.Path getDocPath(String service, String id) {
+    // Firstable, try to find file in buffer
+    java.nio.file.Path path = Paths.get(getDocPathInBuffer(service, id));
+
+    // If document does not exists in buffer try to find it in storage
+    if (!Files.exists(path)) {
+      path = Paths.get(getDocPathInStorage(service, id));
+    }
+
+    return Files.exists(path) ? path : null;
+  }
+
+  private String decodeToUtf8(String value) {// Bugfix with cyrillic
+    try {
+      byte ptext[] = value.getBytes("ISO-8859-1"); 
+      value = new String(ptext, "UTF-8");
+    } catch(Exception e) {}
+    return value;
   }
 
   private String getDocPathInBuffer(String service, String id) {

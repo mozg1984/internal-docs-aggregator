@@ -3,9 +3,9 @@ package com.project.index;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.ru.RussianAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
@@ -14,6 +14,7 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
  
@@ -33,7 +34,7 @@ public class DocumentIndexer {
     public void index(String documentContent, HashMap<String, String> metadata) {
         Document document = new Document();
 
-        document.add(new TextField("contents", documentContent, Store.NO));
+        document.add(new TextField("content", documentContent, Store.NO));
 
         String id = metadata.get("id");
         if (id != null) { document.add(new StringField("id", id, Field.Store.YES)); }
@@ -56,10 +57,26 @@ public class DocumentIndexer {
         addToIndex(document);
     }
 
-    private void addToIndex(Document document) {
+    public void deleteFromIndex(Term term) {
         try {
             Directory directory = FSDirectory.open(Paths.get(indexPath));
             Analyzer analyzer = new StandardAnalyzer();
+            IndexWriterConfig conf = new IndexWriterConfig(analyzer);
+            conf.setOpenMode(OpenMode.CREATE_OR_APPEND);
+            IndexWriter writer = new IndexWriter(directory, conf);
+            
+            writer.deleteDocuments(term);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addToIndex(Document document) {
+        try {
+            Directory directory = FSDirectory.open(Paths.get(indexPath));
+            Analyzer analyzer = new StandardAnalyzer();
+            //Analyzer analyzer = new RussianAnalyzer();
             IndexWriterConfig conf = new IndexWriterConfig(analyzer);
             conf.setOpenMode(OpenMode.CREATE_OR_APPEND);
             IndexWriter writer = new IndexWriter(directory, conf);
