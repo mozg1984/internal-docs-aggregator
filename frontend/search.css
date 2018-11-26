@@ -1,0 +1,17 @@
+.container {
+	margin-top: 10px;
+	width: 1000px;
+}
+
+.form-group {
+  margin: 0;
+  padding: 0;
+}
+
+.form-control {
+  min-height: 200px;
+}
+
+.form-control.list {
+  min-height: 30px;
+}

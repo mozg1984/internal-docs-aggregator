@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test stend: documents</title>
+<script src="libs/jquery-3.3.1/jquery.min.js"></script>
+<script src="libs/bootstrap-3.3.7/js/bootstrap.js"></script>
+<script src="libs/bootstrap-treeview-1.2.0/bootstrap-treeview.min.js"></script>
+<link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.7/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="libs/bootstrap-treeview-1.2.0/bootstrap-treeview.min.css">
+<link rel="stylesheet" type="text/css" href="search.css">
+<script src="search.js"></script>
+</head>
+<body>
+	<div class="container">
+    
+    <div class="panel panel-default">
+			<div class="panel-heading">Service:</div>
+      <div class="form-group">
+        <select class="form-control list" id="service" name="sellist1">
+          <option value="dispatchers">dispatchers</option>
+          <option value="control">control</option>
+          <option value="safety">safety</option>
+        </select>
+      </div>
+		</div>
+
+    <div class="panel panel-default">
+			<div class="panel-heading">Query:</div>
+      <div class="form-group">
+        <textarea class="form-control" rows="5" id="query"></textarea>
+      </div>
+		</div>
+
+		<button type="button" class="btn btn-default btn-sm" style="margin-bottom: 5px;" onclick="App.execute();">
+      <span class="glyphicon glyphicon-refresh"></span> Search
+    </button>
+
+    <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 5px;" onclick="App.reset();">
+      <span class="glyphicon glyphicon-refresh"></span> Reset
+    </button>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">Result:</div>
+      <div class="form-group">
+        <textarea class="form-control" rows="5" id="result"></textarea>
+      </div>
+		</div>
+	</div>
+</body>
+</html>

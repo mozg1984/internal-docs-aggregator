@@ -1,0 +1,17 @@
+.container {
+	margin-top: 10px;
+	width: 1000px;
+}
+
+.well {
+  text-align: center;
+}
+
+.well.well-lg {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.expected > div {
+  color: grey !important;
+}

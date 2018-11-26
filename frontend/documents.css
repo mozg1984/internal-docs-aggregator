@@ -1,0 +1,61 @@
+.container {
+	margin-top: 10px;
+	width: 1000px;
+}
+
+.entities-container {
+	padding: 10px;
+}
+
+.entities-container .controls {
+	margin-bottom: 5px;
+}
+
+.entities-container .list > table th {
+	text-align: center;
+}
+
+.entities-container .list > table th:first-child, td:first-child {
+	text-align: center;
+	width: 50px;
+}
+
+.entities-container .btn.delete-control, .btn.commit-control {
+	display: none;
+}
+
+.success, .error {
+	display: none;
+}
+
+.success span.message, .error span.message {
+	margin-left: 10px;
+}
+
+.form-control-file.border {
+	display: none;
+}
+
+img.loader {
+	width: 16px;
+	margin-left: 15px;
+}
+
+.glyphicon.glyphicon-file {
+	margin-left: 15px;
+}
+
+.services, .categories, .catalogs {
+	width: 300px;
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.documents {
+	clear: both;
+}
+
+.list-group-item.node-category-tree, .list-group-item.node-catalog-tree {
+	padding: 5px;
+}

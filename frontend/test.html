@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test stend: documents</title>
+<script src="libs/jquery-3.3.1/jquery.min.js"></script>
+<script src="libs/bootstrap-3.3.7/js/bootstrap.js"></script>
+<script src="libs/bootstrap-treeview-1.2.0/bootstrap-treeview.min.js"></script>
+<link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.7/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="libs/bootstrap-treeview-1.2.0/bootstrap-treeview.min.css">
+<link rel="stylesheet" type="text/css" href="test.css">
+<script src="test.js"></script>
+</head>
+<body>
+	<div class="container">
+    
+    <div class="well well-lg">Test stand</div>
+
+    <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 15px;" onclick="App.runTest();">
+      <span class="glyphicon glyphicon-refresh"></span> Start testing
+    </button>
+
+    <div class="panel panel-default expected">
+			<div class="panel-heading">Набор тестовых документов:</div>
+      <div class="test-documents">
+        <input type="file" name="pdf">
+        <input type="file" name="doc">
+        <input type="file" name="text">
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar" style="width:0%">0%</div>
+    </div>
+    
+    <div class="well well-sm">Внешние эффекты:</div>
+
+    <div class="panel panel-default expected" id="1">
+			<div class="panel-heading">K1. Поддержка профильной деятельности персонала</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="2">
+			<div class="panel-heading">K2. Сокращение временных затрат на поиск данных (документов)</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="3">
+			<div class="panel-heading">K3. Сокращение временных затрат на принятие решений</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="4">
+			<div class="panel-heading">K4. Устранение дублирования данных (документов)</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="5">
+			<div class="panel-heading">K5. Поддержка данных (документов) различного типа и формата</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="6">
+			<div class="panel-heading">K6. Возможность полнотекстового поиска данных (документов)</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="7">
+			<div class="panel-heading">K7. Возможность поиска данных (документов) по метаданным</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="8">
+			<div class="panel-heading">K8. Возможность работы с метаданными без внесения изменений в кодовую базу системы</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="9">
+			<div class="panel-heading">K9. Возможность интеграции с другими информационными системами</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="10">
+			<div class="panel-heading">K10. Поддержка параллельной работы с данными (документами)</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="well well-sm">Внутренние эффекты:</div>
+
+    <div class="panel panel-default expected" id="11">
+			<div class="panel-heading">K1'. Устойчивость к ошибкам</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="12">
+			<div class="panel-heading">K2'. Гибкость</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="13">
+			<div class="panel-heading">K3'. Тестируемость</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="14">
+			<div class="panel-heading">K4'. Конфигурируемость</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="15">
+			<div class="panel-heading">K5'. Функциональность полнотекстового поиска</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="16">
+			<div class="panel-heading">K6'. Функциональность поиска по метаданным</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="17">
+			<div class="panel-heading">K7'. Функциональность манипулирования метаданными на уровне запросов пользователей</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="18">
+			<div class="panel-heading">K8'. Функциональность обработки данных (документов) различных типов и форматов</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="19">
+			<div class="panel-heading">K9'. Валидируемость входных данных</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="20">
+			<div class="panel-heading">K10'. Гибкость модели данных</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="21">
+			<div class="panel-heading">K11'. Масштабируемость</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="22">
+			<div class="panel-heading">K12'. Скорость поиска данных</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="23">
+			<div class="panel-heading">K13'. Многообразие механизмов поиска данных</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="24">
+			<div class="panel-heading">K14'. Кроссплатформенность (переносимость)</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+
+    <div class="panel panel-default expected" id="25">
+			<div class="panel-heading">K15'. Функциональность веб-сервиса</div>
+      <div class="result">ОЖИДАЕТСЯ</div>
+    </div>
+  </div>
+</body>
+</html>
